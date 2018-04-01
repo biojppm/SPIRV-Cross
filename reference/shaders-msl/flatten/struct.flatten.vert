@@ -5,7 +5,7 @@ using namespace metal;
 
 struct Light
 {
-    float3 Position;
+    packed_float3 Position;
     float Radius;
     float4 Color;
 };
@@ -18,15 +18,14 @@ struct UBO
 
 struct main0_in
 {
-    float4 aVertex [[attribute(0)]];
     float3 aNormal [[attribute(1)]];
+    float4 aVertex [[attribute(0)]];
 };
 
 struct main0_out
 {
     float4 vColor [[user(locn0)]];
     float4 gl_Position [[position]];
-    float gl_PointSize;
 };
 
 vertex main0_out main0(main0_in in [[stage_in]], constant UBO& _18 [[buffer(0)]])

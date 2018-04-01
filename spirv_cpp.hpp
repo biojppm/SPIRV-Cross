@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 ARM Limited
+ * Copyright 2015-2018 ARM Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ public:
 private:
 	void emit_header() override;
 	void emit_c_linkage();
-	void emit_function_prototype(SPIRFunction &func, uint64_t return_flags) override;
+	void emit_function_prototype(SPIRFunction &func, const Bitset &return_flags) override;
 
 	void emit_resources();
 	void emit_buffer_block(const SPIRVariable &type) override;
@@ -61,7 +61,7 @@ private:
 	void emit_uniform(const SPIRVariable &var) override;
 	void emit_shared(const SPIRVariable &var);
 	void emit_block_struct(SPIRType &type);
-	std::string variable_decl(const SPIRType &type, const std::string &name) override;
+	std::string variable_decl(const SPIRType &type, const std::string &name, uint32_t id) override;
 
 	std::string argument_decl(const SPIRFunction::Parameter &arg);
 

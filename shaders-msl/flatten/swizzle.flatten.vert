@@ -27,7 +27,12 @@ layout(std140) uniform UBO
     float F2;
 };
 
-out vec4 oA, oB, oC, oD, oE, oF;
+layout(location = 0) out vec4 oA;
+layout(location = 1) out vec4 oB;
+layout(location = 2) out vec4 oC;
+layout(location = 3) out vec4 oD;
+layout(location = 4) out vec4 oE;
+layout(location = 5) out vec4 oF;
 
 void main()
 {
@@ -35,8 +40,8 @@ void main()
 
     oA = A;
     oB = vec4(B0, B1);
-    oC = vec4(C0, C1);
-    oD = vec4(D0, D1);
+    oC = vec4(C0, C1) + vec4(C1.xy, C1.z, C0);	// not packed
+    oD = vec4(D0, D1) + vec4(D0.xy, D0.z, D1);	// packed - must convert for swizzle
     oE = vec4(E0, E1, E2, E3);
     oF = vec4(F0, F1, F2);
 }

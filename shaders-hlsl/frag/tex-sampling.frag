@@ -1,24 +1,29 @@
 #version 450
 
-uniform sampler1D tex1d;
-uniform sampler2D tex2d;
-uniform sampler3D tex3d;
-uniform samplerCube texCube;
+layout(binding = 0) uniform sampler1D tex1d;
+layout(binding = 1) uniform sampler2D tex2d;
+layout(binding = 2) uniform sampler3D tex3d;
+layout(binding = 3) uniform samplerCube texCube;
 
-uniform sampler1DShadow tex1dShadow;
-uniform sampler2DShadow tex2dShadow;
-uniform samplerCubeShadow texCubeShadow;
+layout(binding = 4) uniform sampler1DShadow tex1dShadow;
+layout(binding = 5) uniform sampler2DShadow tex2dShadow;
+layout(binding = 6) uniform samplerCubeShadow texCubeShadow;
 
-uniform sampler1DArray tex1dArray;
-uniform sampler2DArray tex2dArray;
-uniform samplerCubeArray texCubeArray;
+layout(binding = 7) uniform sampler1DArray tex1dArray;
+layout(binding = 8) uniform sampler2DArray tex2dArray;
+layout(binding = 9) uniform samplerCubeArray texCubeArray;
 
-in float texCoord1d;
-in vec2 texCoord2d;
-in vec3 texCoord3d;
-in vec4 texCoord4d;
+layout(binding = 10) uniform samplerShadow samplerDepth;
+layout(binding = 11) uniform sampler samplerNonDepth;
+layout(binding = 12) uniform texture2D separateTex2d;
+layout(binding = 13) uniform texture2D separateTex2dDepth;
 
-out vec4 FragColor;
+layout(location = 0) in float texCoord1d;
+layout(location = 1) in vec2 texCoord2d;
+layout(location = 2) in vec3 texCoord3d;
+layout(location = 3) in vec4 texCoord4d;
+
+layout(location = 0) out vec4 FragColor;
 
 void main()
 {
@@ -56,8 +61,21 @@ void main()
 	texcolor += texture(texCubeArray, texCoord4d);
 
 	texcolor += textureGather(tex2d, texCoord2d);
+	texcolor += textureGather(tex2d, texCoord2d, 0);
+	texcolor += textureGather(tex2d, texCoord2d, 1);
+	texcolor += textureGather(tex2d, texCoord2d, 2);
+	texcolor += textureGather(tex2d, texCoord2d, 3);
+
+	texcolor += textureGatherOffset(tex2d, texCoord2d, ivec2(1, 1));
+	texcolor += textureGatherOffset(tex2d, texCoord2d, ivec2(1, 1), 0);
+	texcolor += textureGatherOffset(tex2d, texCoord2d, ivec2(1, 1), 1);
+	texcolor += textureGatherOffset(tex2d, texCoord2d, ivec2(1, 1), 2);
+	texcolor += textureGatherOffset(tex2d, texCoord2d, ivec2(1, 1), 3);
 
 	texcolor += texelFetch(tex2d, ivec2(1, 2), 0);
+
+	texcolor += texture(sampler2D(separateTex2d, samplerNonDepth), texCoord2d);
+	texcolor.a += texture(sampler2DShadow(separateTex2dDepth, samplerDepth), texCoord3d);
 
 	FragColor = texcolor;
 }
